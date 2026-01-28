@@ -183,10 +183,7 @@ To maintain stability and ensure timely delivery, the following features were in
 * Real-time GPS tracking
 * Background location monitoring
 * Hardware sensors or wearables
-* Payment processing
-* Government ID verification
-* AI or ML-based behavior analysis
-  's
+  
   These decisions reduced complexity while improving privacy and system reliability.
 
 ---
