@@ -231,6 +231,74 @@ It represents a realistic prototype rather than a production-scale commercial sy
 
 ---
 
-## 14. Conclusion
+## 14. Flutter Project Structure (Initial Setup)
+
+The Flutter project is structured to support incremental feature development
+while maintaining clear separation of concerns.
+
+```
+lib/
+├── main.dart        # Application entry point
+├── screens/         # UI screens representing full pages
+├── widgets/         # Reusable UI components
+├── models/          # Data models for application entities
+├── services/        # Backend and Firebase-related logic
+```
+
+This modular structure enables the codebase to scale cleanly as new features
+are introduced in later sprints while keeping UI, logic, and data layers
+loosely coupled.
+
+---
+
+## 15. Setup Instructions
+
+To run this project locally:
+
+1. Install the Flutter SDK
+2. Clone this repository
+3. Run the following commands:
+
+flutter pub get  
+flutter run
+
+Ensure an Android emulator or a physical device is connected before running
+the application.
+
+---
+
+## 16. Naming Conventions
+
+- File names use snake_case (e.g., welcome_screen.dart)
+- Widget and class names use PascalCase (e.g., WelcomeScreen)
+- Variables and methods use camelCase
+- Folder names represent responsibility (screens, widgets, services)
+
+---
+
+## 17. Reflection
+
+Through this task, I learned the basics of Flutter project structure and how
+Flutter uses widgets to build UI declaratively. I understood the role of
+`main.dart` as the entry point, the difference between screens and reusable
+widgets, and how organizing code into clear directories helps in scaling
+applications.
+
+This structure will help in building more complex UIs later by keeping
+presentation, logic, and data responsibilities separated and easier to
+maintain.
+
+---
+
+## 18. Demo
+
+The following screenshot demonstrates the Flutter application running locally
+after successful setup.
+
+![Flutter App Demo](pet_sure/assets/Demo.png)
+
+---
+
+## 19. Conclusion
 
 The Pet Care Discovery & Activity Tracking Platform demonstrates how thoughtful system design, controlled scope, and transparent workflows can address trust and visibility challenges without relying on complex infrastructure. The project emphasizes engineering judgment, reliability, and user-centric design, aligning with modern software development practices.
