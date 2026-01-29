@@ -12,9 +12,9 @@ The project is intentionally built as a **software-only prototype**, focusing on
 
 In urban environments, pet owners often depend on informal or unverified arrangements when hiring pet walkers or caregivers. Once a pet is handed over, owners lack clear visibility into:
 
-* Who is providing care
-* When the care activity started and ended
-* What actions were performed during the session
+- Who is providing care
+- When the care activity started and ended
+- What actions were performed during the session
 
 This absence of structured processes leads to uncertainty, reduced trust, and poor accountability. Existing solutions often attempt to solve this using continuous GPS tracking or hardware devices, which introduce privacy, cost, and reliability concerns.
 
@@ -26,10 +26,10 @@ This project approaches the problem by prioritizing **structured transparency ov
 
 Instead of continuous tracking, the platform relies on:
 
-* Explicit caregiver actions (start/end activity)
-* Immutable, time-stamped records
-* Location context at key moments
-* Clear booking and activity workflows
+- Explicit caregiver actions (start/end activity)
+- Immutable, time-stamped records
+- Location context at key moments
+- Clear booking and activity workflows
 
 Trust is built incrementally through consistent behavior, visible history, and accountability rather than one-time verification or intrusive monitoring.
 
@@ -37,11 +37,11 @@ Trust is built incrementally through consistent behavior, visible history, and a
 
 ## 4. Core Objectives
 
-* Enable trusted, location-based discovery of caregivers
-* Provide clear visibility into pet care activities
-* Establish accountability through traceable records
-* Deliver a reliable MVP within a controlled scope
-* Follow modern software development best practices
+- Enable trusted, location-based discovery of caregivers
+- Provide clear visibility into pet care activities
+- Establish accountability through traceable records
+- Deliver a reliable MVP within a controlled scope
+- Follow modern software development best practices
 
 ---
 
@@ -49,16 +49,16 @@ Trust is built incrementally through consistent behavior, visible history, and a
 
 ### 5.1 Frontend
 
-* Built using **Flutter** for cross-platform mobile support
-* State-driven UI architecture
-* Google Maps SDK for spatial visualization
-* Designed with clarity and minimal user friction
+- Built using **Flutter** for cross-platform mobile support
+- State-driven UI architecture
+- Google Maps SDK for spatial visualization
+- Designed with clarity and minimal user friction
 
 ### 5.2 Backend
 
-* **Firebase Authentication** for identity management
-* **Cloud Firestore** for real-time, scalable data storage
-* **Firebase Cloud Functions** for event-driven backend logic
+- **Firebase Authentication** for identity management
+- **Cloud Firestore** for real-time, scalable data storage
+- **Firebase Cloud Functions** for event-driven backend logic
 
 ---
 
@@ -66,60 +66,59 @@ Trust is built incrementally through consistent behavior, visible history, and a
 
 ### 6.1 Authentication & User Roles
 
-* Secure user authentication via Firebase Auth
-* Explicit role separation:
+- Secure user authentication via Firebase Auth
+- Explicit role separation:
+  - Pet Owner
+  - Caregiver
 
-  * Pet Owner
-  * Caregiver
-* Role-based access control for all critical actions
+- Role-based access control for all critical actions
 
 ---
 
 ### 6.2 Pet Profile Management
 
-* Create and manage pet profiles
-* Store basic pet information
-* Maintain care instructions and notes
+- Create and manage pet profiles
+- Store basic pet information
+- Maintain care instructions and notes
 
 ---
 
 ### 6.3 Caregiver Discovery
 
-* Map-based discovery of caregivers
-* Proximity-based filtering
-* Caregiver profile view with experience and service details
+- Map-based discovery of caregivers
+- Proximity-based filtering
+- Caregiver profile view with experience and service details
 
 ---
 
 ### 6.4 Booking Workflow
 
-* Structured booking lifecycle:
+- Structured booking lifecycle:
+  - Pending
+  - Accepted
+  - Completed
 
-  * Pending
-  * Accepted
-  * Completed
-* All interactions occur within the platform
-* Prevents informal or untraceable engagements
+- All interactions occur within the platform
+- Prevents informal or untraceable engagements
 
 ---
 
 ### 6.5 Activity Logging (Core Feature)
 
-* Caregivers explicitly start and end an activity
-* On activity start:
+- Caregivers explicitly start and end an activity
+- On activity start:
+  - Timestamp is recorded
+  - Current location is captured
 
-  * Timestamp is recorded
-  * Current location is captured
-* On activity end:
-
-  * End timestamp and location are recorded
-  * Optional notes and photos can be added
+- On activity end:
+  - End timestamp and location are recorded
+  - Optional notes and photos can be added
 
 Each activity record is immutable once completed and is tied to:
 
-* A specific caregiver
-* A specific pet
-* A specific booking
+- A specific caregiver
+- A specific pet
+- A specific booking
 
 ---
 
@@ -127,10 +126,10 @@ Each activity record is immutable once completed and is tied to:
 
 Pet owners can view:
 
-* Activity start and end times
-* Total duration
-* Start and end locations displayed on a map
-* Notes or photos shared by the caregiver
+- Activity start and end times
+- Total duration
+- Start and end locations displayed on a map
+- Notes or photos shared by the caregiver
 
 This creates a clear, auditable timeline of events.
 
@@ -138,12 +137,12 @@ This creates a clear, auditable timeline of events.
 
 ### 6.7 Notifications
 
-* Push notifications for:
+- Push notifications for:
+  - Booking acceptance
+  - Activity start
+  - Activity completion
 
-  * Booking acceptance
-  * Activity start
-  * Activity completion
-* Implemented using Cloud Functions reacting to database changes
+- Implemented using Cloud Functions reacting to database changes
 
 ---
 
@@ -151,28 +150,28 @@ This creates a clear, auditable timeline of events.
 
 High-level Firestore collections:
 
-* `users`
-* `pets`
-* `caregivers`
-* `bookings`
-* `activities`
+- `users`
+- `pets`
+- `caregivers`
+- `bookings`
+- `activities`
 
 The data model emphasizes:
 
-* Clear ownership relationships
-* Immutable activity logs
-* Predictable state transitions
+- Clear ownership relationships
+- Immutable activity logs
+- Predictable state transitions
 
 ---
 
 ## 8. Development Practices Followed
 
-* Clear separation of concerns (UI, logic, data)
-* Predictable and explicit state transitions
-* Defensive validation in backend functions
-* Consistent naming and schema conventions
-* Early scope definition to avoid feature creep
-* Emphasis on reliability over feature volume
+- Clear separation of concerns (UI, logic, data)
+- Predictable and explicit state transitions
+- Defensive validation in backend functions
+- Consistent naming and schema conventions
+- Early scope definition to avoid feature creep
+- Emphasis on reliability over feature volume
 
 ---
 
@@ -180,10 +179,10 @@ The data model emphasizes:
 
 To maintain stability and ensure timely delivery, the following features were intentionally excluded from the MVP:
 
-* Real-time GPS tracking
-* Background location monitoring
-* Hardware sensors or wearables
-  
+- Real-time GPS tracking
+- Background location monitoring
+- Hardware sensors or wearables
+
   These decisions reduced complexity while improving privacy and system reliability.
 
 ---
@@ -192,30 +191,30 @@ To maintain stability and ensure timely delivery, the following features were in
 
 Potential improvements identified for future iterations:
 
-* Location consistency checks
-* Reputation scoring over time
-* Admin moderation dashboard
-* Offline activity logging and sync
-* Calendar-based scheduling
-* Secure payment integration
+- Location consistency checks
+- Reputation scoring over time
+- Admin moderation dashboard
+- Offline activity logging and sync
+- Calendar-based scheduling
+- Secure payment integration
 
 ---
 
 ## 11. UX & Design Process
 
-* User flows and screen designs created in **Figma**
-* Focus on intuitive navigation and low cognitive load
-* Explicit action buttons for critical operations
-* Timeline-based visualization for activities
+- User flows and screen designs created in **Figma**
+- Focus on intuitive navigation and low cognitive load
+- Explicit action buttons for critical operations
+- Timeline-based visualization for activities
 
 ---
 
 ## 12. Key Learnings
 
-* Trust is built through transparency and repetition, not promises
-* Explicit user actions are more reliable than automation
-* Designing for human error improves system resilience
-* Controlled scope is essential for delivering quality software
+- Trust is built through transparency and repetition, not promises
+- Explicit user actions are more reliable than automation
+- Designing for human error improves system resilience
+- Controlled scope is essential for delivering quality software
 
 ---
 
@@ -223,9 +222,9 @@ Potential improvements identified for future iterations:
 
 This project is intended for:
 
-* Portfolio demonstration
-* Technical interviews
-* Learning and experimentation
+- Portfolio demonstration
+- Technical interviews
+- Learning and experimentation
 
 It represents a realistic prototype rather than a production-scale commercial system.
 
@@ -290,7 +289,22 @@ maintain.
 
 ---
 
-## 18. Demo
+## 18. Project Structure Documentation
+
+This repository includes a detailed explanation of the Flutter project folder
+structure in [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md).
+
+The document describes the purpose of each core folder and configuration file
+and explains how a well-organized structure helps in building scalable and
+maintainable Flutter applications.
+
+---
+
+### Folder Structure Snapshot
+
+![Flutter Folder Structure](pet_sure/assets/FolderStructure.png)
+
+## 19. Demo
 
 The following screenshot demonstrates the Flutter application running locally
 after successful setup.
@@ -299,6 +313,6 @@ after successful setup.
 
 ---
 
-## 19. Conclusion
+## 20. Conclusion
 
 The Pet Care Discovery & Activity Tracking Platform demonstrates how thoughtful system design, controlled scope, and transparent workflows can address trust and visibility challenges without relying on complex infrastructure. The project emphasizes engineering judgment, reliability, and user-centric design, aligning with modern software development practices.
