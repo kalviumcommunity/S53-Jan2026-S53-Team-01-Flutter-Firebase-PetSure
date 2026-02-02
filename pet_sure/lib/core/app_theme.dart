@@ -5,5 +5,7 @@ class AppTheme {
     useMaterial3: true,
     fontFamily: 'PlusJakartaSans'
   );
+
+  static const Color primaryOrange = Color(0xFFE67E22);
 }
 

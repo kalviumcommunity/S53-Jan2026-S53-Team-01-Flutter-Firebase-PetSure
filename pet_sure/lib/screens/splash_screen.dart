@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_sure/core/app_theme.dart';
 import 'package:pet_sure/screens/welcome_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -60,7 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       const Icon(
                         Icons.pets,
                         size: 56,
-                        color: Color(0xFFE67E22),
+                        color: AppTheme.primaryOrange,
                       ),
                       Positioned(
                         bottom: -2,
@@ -68,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE67E22),
+                            color: AppTheme.primaryOrange,
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(color: Colors.white, width: 2),
                           ),
@@ -114,7 +115,6 @@ class _SplashScreenState extends State<SplashScreen> {
                     vertical: 8,
                   ),
                   height: 42,
-                  // width: ,
                   decoration: BoxDecoration(
                     border: Border.all(color: const Color(0xFFF1C27D)),
                     borderRadius: BorderRadius.circular(24),
@@ -125,7 +125,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     children: const [
                       Icon(
                         Icons.verified_user,
-                        color: Color(0xFFE67E22),
+                        color: AppTheme.primaryOrange,
                         size: 16,
                       ),
                       SizedBox(width: 8),
@@ -147,7 +147,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   child: LinearProgressIndicator(
                     minHeight: 4,
                     backgroundColor: Color(0xFFF3E3C8),
-                    valueColor: AlwaysStoppedAnimation(Color(0xFFE67E22)),
+                    valueColor: AlwaysStoppedAnimation(AppTheme.primaryOrange),
                   ),
                 ),
 

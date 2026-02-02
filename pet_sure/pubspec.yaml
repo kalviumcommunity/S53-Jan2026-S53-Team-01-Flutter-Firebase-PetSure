@@ -76,7 +76,7 @@ flutter:
   fonts:
     - family: PlusJakartaSans
       fonts:
-        - asset: assets/fonts/PlusJakartaSans/PlusJakartaSans-Bold.ttf
+        - asset: assets/fonts/PlusJakartaSans/PlusJakartaSans-Regular.ttf
           weight: 400
         - asset: assets/fonts/PlusJakartaSans/PlusJakartaSans-Medium.ttf
           weight: 500
