@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
-import 'package:pet_sure/screens/signup_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatelessWidget {
+  const SignupScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +16,7 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // const SizedBox(height: 60),
+              /// HEADER
               Column(
                 children: [
                   Container(
@@ -36,14 +35,19 @@ class LoginScreen extends StatelessWidget {
                   ),
 
                   const SizedBox(height: 32),
+
                   const Text(
-                    'Welcome Back',
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.w600),
+                    'Create Account',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
 
                   const SizedBox(height: 12),
+
                   const Text(
-                    'Discover the best care for your furry companions',
+                    'Join us to give your pet the best care possible',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 16,
@@ -54,40 +58,34 @@ class LoginScreen extends StatelessWidget {
                 ],
               ),
 
-              // const SizedBox(height: 12),
-              const LoginForm(),
+              /// FORM
+              const SignupForm(),
 
-              // const SizedBox(height: 24),
+              /// FOOTER
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    'New to PetCare?',
+                    'Already have an account?',
                     style: TextStyle(
                       color: AppTheme.secondaryGray,
                       fontSize: 16,
-                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                  const SizedBox(width: 2),
+                  const SizedBox(width: 4),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const SignupScreen(),
-                        ),
-                      );
+                      Navigator.pop(context); // back to login
                     },
                     child: Text(
-                      'Create an account',
+                      'Log In',
                       style: TextStyle(
                         color: AppTheme.primaryOrange,
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ],
@@ -98,22 +96,63 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-class LoginForm extends StatefulWidget {
-  const LoginForm({super.key});
+class SignupForm extends StatefulWidget {
+  const SignupForm({super.key});
 
   @override
-  State<LoginForm> createState() => _LoginFormState();
+  State<SignupForm> createState() => _SignupFormState();
 }
 
-class _LoginFormState extends State<LoginForm> {
+class _SignupFormState extends State<SignupForm> {
   bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+
+  InputDecoration _inputDecoration(String hint) {
+    return InputDecoration(
+      hintText: hint,
+      hintStyle: const TextStyle(color: AppTheme.tertiaryGray),
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 16,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(28),
+        borderSide: const BorderSide(color: AppTheme.borderGray),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(28),
+        borderSide: BorderSide(
+          color: AppTheme.primaryOrange.withValues(alpha: 0.4),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// EMAIL LABEL
+        /// NAME
+        const Text(
+          'FULL NAME',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.primaryGray,
+            letterSpacing: 1,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          decoration: _inputDecoration('John Doe'),
+        ),
+
+        const SizedBox(height: 20),
+
+        /// EMAIL
         const Text(
           'EMAIL ADDRESS',
           style: TextStyle(
@@ -123,84 +162,33 @@ class _LoginFormState extends State<LoginForm> {
             letterSpacing: 1,
           ),
         ),
-
         const SizedBox(height: 8),
-
-        /// EMAIL FIELD
         TextField(
           keyboardType: TextInputType.emailAddress,
-          decoration: InputDecoration(
-            hintText: 'name@example.com',
-            hintStyle: const TextStyle(color: AppTheme.tertiaryGray),
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(28),
-              borderSide: const BorderSide(color: AppTheme.borderGray),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(28),
-              borderSide: BorderSide(
-                color: AppTheme.primaryOrange.withValues(
-                  alpha: 0.4,
-                ), // primary orange
-              ),
-            ),
-          ),
+          decoration: _inputDecoration('name@example.com'),
         ),
 
         const SizedBox(height: 20),
 
-        /// PASSWORD LABEL + FORGOT
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'PASSWORD',
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                color: AppTheme.primaryGray,
-                letterSpacing: 1,
-              ),
-            ),
-            GestureDetector(
-              onTap: () {
-                // later
-              },
-              child: Text(
-                'Forgot?',
-                style: TextStyle(
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.primaryOrange,
-                ),
-              ),
-            ),
-          ],
+        /// PASSWORD
+        const Text(
+          'PASSWORD',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.primaryGray,
+            letterSpacing: 1,
+          ),
         ),
-
         const SizedBox(height: 8),
-
-        /// PASSWORD FIELD
         TextField(
           obscureText: _obscurePassword,
-          decoration: InputDecoration(
-            hintText: 'Enter your password',
-            hintStyle: const TextStyle(color: AppTheme.tertiaryGray),
-            filled: true,
-            fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 16,
-            ),
+          decoration: _inputDecoration('Create a password').copyWith(
             suffixIcon: IconButton(
               icon: Icon(
-                _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                _obscurePassword
+                    ? Icons.visibility_off
+                    : Icons.visibility,
                 color: AppTheme.tertiaryGray,
               ),
               onPressed: () {
@@ -209,27 +197,51 @@ class _LoginFormState extends State<LoginForm> {
                 });
               },
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(28),
-              borderSide: const BorderSide(color: AppTheme.borderGray),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(28),
-              borderSide: BorderSide(
-                color: AppTheme.primaryOrange.withValues(alpha: 0.4),
+          ),
+        ),
+
+        const SizedBox(height: 20),
+
+        /// CONFIRM PASSWORD
+        const Text(
+          'CONFIRM PASSWORD',
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: AppTheme.primaryGray,
+            letterSpacing: 1,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          obscureText: _obscureConfirmPassword,
+          decoration: _inputDecoration('Re-enter password').copyWith(
+            suffixIcon: IconButton(
+              icon: Icon(
+                _obscureConfirmPassword
+                    ? Icons.visibility_off
+                    : Icons.visibility,
+                color: AppTheme.tertiaryGray,
               ),
+              onPressed: () {
+                setState(() {
+                  _obscureConfirmPassword =
+                      !_obscureConfirmPassword;
+                });
+              },
             ),
           ),
         ),
 
-        const SizedBox(height: 24),
+        const SizedBox(height: 28),
 
+        /// SIGN UP BUTTON
         SizedBox(
           width: double.infinity,
           height: 52,
           child: ElevatedButton(
             onPressed: () {
-              // TODO: handle login later
+              // TODO: handle signup
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryOrange,
@@ -239,7 +251,7 @@ class _LoginFormState extends State<LoginForm> {
               ),
             ),
             child: const Text(
-              'Log In',
+              'Create Account',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
