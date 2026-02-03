@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
-import 'package:pet_sure/screens/welcome_screen.dart';
+import 'package:pet_sure/screens/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const WelcomeScreen()),
+        MaterialPageRoute(builder: (_) => const LoginScreen()),
       );
     });
   }
