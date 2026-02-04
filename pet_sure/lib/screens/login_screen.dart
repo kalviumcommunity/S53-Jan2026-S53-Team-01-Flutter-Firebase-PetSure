@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
 import 'package:pet_sure/screens/signup_screen.dart';
+import 'package:pet_sure/screens/role_selection_screen.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -87,7 +88,7 @@ class LoginScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ],
@@ -229,7 +230,10 @@ class _LoginFormState extends State<LoginForm> {
           height: 52,
           child: ElevatedButton(
             onPressed: () {
-              // TODO: handle login later
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (_) => const RoleSelectionScreen()),
+              );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryOrange,
