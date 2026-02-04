@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
+import 'package:pet_sure/screens/signup_screen.dart';
 import 'package:pet_sure/screens/role_selection_screen.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -72,7 +73,12 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(width: 2),
                   GestureDetector(
                     onTap: () {
-                      // later
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const SignupScreen(),
+                        ),
+                      );
                     },
                     child: Text(
                       'Create an account',
