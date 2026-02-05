@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
+import 'package:pet_sure/screens/caregiver/dashboard_screen.dart';
 
 enum UserRole { petOwner, caregiver }
 
@@ -79,11 +80,14 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
               ),
 
               ElevatedButton(
-                onPressed: () {
+                onPressed: selectedRole == null ? null : () {
                   log("Continue pressed");
+                  if (selectedRole == UserRole.caregiver) {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => const DashboardScreen()));
+                  }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: AppTheme.primaryOrange,
+                  backgroundColor: selectedRole == null ? AppTheme.primaryGray : AppTheme.primaryOrange,
                   foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 56),
                   shape: RoundedRectangleBorder(

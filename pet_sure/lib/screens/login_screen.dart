@@ -9,6 +9,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           width: double.infinity,
@@ -18,7 +19,6 @@ class LoginScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              // const SizedBox(height: 60),
               Column(
                 children: [
                   Container(
@@ -55,10 +55,15 @@ class LoginScreen extends StatelessWidget {
                 ],
               ),
 
-              // const SizedBox(height: 12),
-              const LoginForm(),
+              SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(
+                    context,
+                  ).viewInsets.bottom, // 👈 KEY LINE
+                ),
+                child: const LoginForm(),
+              ),
 
-              // const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -75,9 +80,7 @@ class LoginScreen extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(
-                          builder: (_) => const SignupScreen(),
-                        ),
+                        MaterialPageRoute(builder: (_) => const SignupScreen()),
                       );
                     },
                     child: Text(
@@ -148,7 +151,7 @@ class _LoginFormState extends State<LoginForm> {
               borderSide: BorderSide(
                 color: AppTheme.primaryOrange.withValues(
                   alpha: 0.4,
-                ), // primary orange
+                ),
               ),
             ),
           ),
@@ -189,6 +192,7 @@ class _LoginFormState extends State<LoginForm> {
 
         /// PASSWORD FIELD
         TextField(
+          keyboardType: TextInputType.emailAddress,
           obscureText: _obscurePassword,
           decoration: InputDecoration(
             hintText: 'Enter your password',
@@ -230,7 +234,7 @@ class _LoginFormState extends State<LoginForm> {
           height: 52,
           child: ElevatedButton(
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => const RoleSelectionScreen()),
               );
