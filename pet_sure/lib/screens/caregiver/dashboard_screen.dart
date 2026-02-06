@@ -15,7 +15,7 @@ class DashboardScreen extends StatelessWidget {
           children: [
             const CircleAvatar(
               backgroundImage: AssetImage(
-                'assets/caregiver_profile.jpg',
+                'assets/puppy.jpg',
               ),
               radius: 20,
             ),
@@ -51,7 +51,7 @@ class DashboardScreen extends StatelessWidget {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
+                  color: Colors.black.withValues(alpha: 0.05),
                   blurRadius: 10,
                   offset: const Offset(0, 4),
                 ),
@@ -87,7 +87,7 @@ class DashboardScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -99,7 +99,7 @@ class DashboardScreen extends StatelessWidget {
                     children: [
                       const CircleAvatar(
                         radius: 30,
-                        backgroundImage: AssetImage('assets/images/puppy.jpg'),
+                        backgroundImage: AssetImage('assets/puppy.jpg'),
                       ),
                       Positioned(
                         right: 0,
@@ -226,7 +226,7 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: 16),
             _buildJobCard(
               name: 'Cooper',
-              image: 'assets/images/puppy.jpg',
+              image: 'assets/puppy.jpg',
               details: 'Mike R. • Upper West Side',
               time: 'Today, 4:00 PM',
               service: 'Dog Walking',
@@ -239,7 +239,7 @@ class DashboardScreen extends StatelessWidget {
             const SizedBox(height: 16),
             _buildJobCard(
               name: 'Luna',
-              image: 'assets/images/puppy.jpg',
+              image: 'assets/puppy.jpg',
               details: 'Emily W. • Brooklyn Heights',
               time: 'Tue, Jul 12',
               service: 'House Sitting',
@@ -266,7 +266,7 @@ class DashboardScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -293,38 +293,7 @@ class DashboardScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedItemColor: AppTheme.primaryOrange,
-        unselectedItemColor: AppTheme.tertiaryGray,
-        selectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontWeight: FontWeight.w500,
-          fontSize: 12,
-        ),
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore),
-            label: 'Dashboard',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.file_open),
-            label: 'Invites',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today),
-            label: 'Schedule',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-        ],
-      ),
+
     );
   }
 
@@ -347,7 +316,7 @@ class DashboardScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
-import 'package:pet_sure/screens/caregiver/dashboard_screen.dart';
+import 'package:pet_sure/screens/caregiver/caregiver_main_screen.dart';
 import 'package:pet_sure/screens/petowner/dashboard_screen.dart';
 
 enum UserRole { petOwner, caregiver }
@@ -24,7 +24,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => const DashboardScreen(),
+          builder: (_) => const CaregiverMainScreen(),
         ),
       );
     } else if (selectedRole == UserRole.petOwner) {
