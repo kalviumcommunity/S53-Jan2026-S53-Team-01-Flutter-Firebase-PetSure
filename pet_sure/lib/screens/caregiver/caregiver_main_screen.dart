@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
 import 'package:pet_sure/screens/caregiver/dashboard_screen.dart';
 import 'package:pet_sure/screens/caregiver/requests_screen.dart';
-// import 'package:pet_sure/screens/caregiver/schedule_screen.dart';
+import 'package:pet_sure/screens/caregiver/schedule_screen.dart';
 // import 'package:pet_sure/screens/caregiver/profile_screen.dart';
 
 class CaregiverMainScreen extends StatefulWidget {
@@ -18,7 +18,7 @@ class _CaregiverMainScreenState extends State<CaregiverMainScreen> {
   final List<Widget> _screens = const [
     DashboardScreen(),
     RequestsScreen(),
-    // ScheduleScreen(),
+    ScheduleScreen(),
     // CaregiverProfile(),
   ];
 
@@ -60,10 +60,10 @@ class _CaregiverMainScreenState extends State<CaregiverMainScreen> {
             icon: Icon(Icons.file_open),
             label: 'Invites',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.calendar_today),
-          //   label: 'Schedule',
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calendar_today),
+            label: 'Schedule',
+          ),
           // BottomNavigationBarItem(
           //   icon: Icon(Icons.person),
           //   label: 'Profile',
