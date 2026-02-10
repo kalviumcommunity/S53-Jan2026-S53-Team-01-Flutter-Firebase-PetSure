@@ -3,7 +3,7 @@ import 'package:pet_sure/core/app_theme.dart';
 import 'package:pet_sure/screens/caregiver/dashboard_screen.dart';
 import 'package:pet_sure/screens/caregiver/requests_screen.dart';
 import 'package:pet_sure/screens/caregiver/schedule_screen.dart';
-// import 'package:pet_sure/screens/caregiver/profile_screen.dart';
+import 'package:pet_sure/screens/caregiver/profile_screen.dart';
 
 class CaregiverMainScreen extends StatefulWidget {
   const CaregiverMainScreen({super.key});
@@ -19,7 +19,7 @@ class _CaregiverMainScreenState extends State<CaregiverMainScreen> {
     DashboardScreen(),
     RequestsScreen(),
     ScheduleScreen(),
-    // CaregiverProfile(),
+    CaregiverProfile(),
   ];
 
   void _onItemTapped(int index) {
@@ -64,10 +64,10 @@ class _CaregiverMainScreenState extends State<CaregiverMainScreen> {
             icon: Icon(Icons.calendar_today),
             label: 'Schedule',
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.person),
-          //   label: 'Profile',
-          // ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
         ],
       ),
     );
