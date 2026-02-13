@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
+import 'package:pet_sure/screens/login_screen.dart';
+import 'package:pet_sure/services/auth_service.dart';
 
 class CaregiverProfile extends StatelessWidget {
   const CaregiverProfile({super.key});
@@ -22,7 +24,11 @@ class CaregiverProfile extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.black, size: 20),
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: Colors.black,
+            size: 20,
+          ),
           onPressed: () {}, // No-op as per main nav
         ),
       ),
@@ -41,7 +47,9 @@ class CaregiverProfile extends StatelessWidget {
             const SizedBox(height: 24),
             _buildEditProfileButton(),
             const SizedBox(height: 32),
-            _buildSectionHeader('SERVICES'), // Implicit in design but good for structure
+            _buildSectionHeader(
+              'SERVICES',
+            ), // Implicit in design but good for structure
             const SizedBox(height: 12),
             _buildServiceCard(),
             const SizedBox(height: 32),
@@ -49,6 +57,7 @@ class CaregiverProfile extends StatelessWidget {
             const SizedBox(height: 12),
             _buildAvailabilityWeek(),
             const SizedBox(height: 40),
+            _buildLogoutButton(context),
           ],
         ),
       ),
@@ -72,7 +81,9 @@ class CaregiverProfile extends StatelessWidget {
                 decoration: const BoxDecoration(
                   color: Color(0xFF00C853), // Green verification color
                   shape: BoxShape.circle,
-                  border: Border.fromBorderSide(BorderSide(color: Colors.white, width: 3)),
+                  border: Border.fromBorderSide(
+                    BorderSide(color: Colors.white, width: 3),
+                  ),
                 ),
                 child: const Icon(Icons.check, color: Colors.white, size: 12),
               ),
@@ -159,7 +170,12 @@ class CaregiverProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildStatItem(String value, String label, IconData icon, Color color) {
+  Widget _buildStatItem(
+    String value,
+    String label,
+    IconData icon,
+    Color color,
+  ) {
     return Column(
       children: [
         Container(
@@ -193,11 +209,7 @@ class CaregiverProfile extends StatelessWidget {
   }
 
   Widget _buildVerticalDivider() {
-    return Container(
-      height: 40,
-      width: 1,
-      color: Colors.grey.shade100,
-    );
+    return Container(height: 40, width: 1, color: Colors.grey.shade100);
   }
 
   Widget _buildSectionHeader(String title) {
@@ -261,13 +273,49 @@ class CaregiverProfile extends StatelessWidget {
           children: [
             Text(
               'Edit Profile',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             SizedBox(width: 8),
             Icon(Icons.edit, size: 16),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLogoutButton(context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () async {
+          await AuthService().logout();
+
+          if (context.mounted) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+              (route) => false,
+            );
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppTheme.primaryOrange,
+          foregroundColor: Colors.white,
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          elevation: 0,
+        ),
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Logout',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(width: 8),
+            Icon(Icons.logout, size: 16),
           ],
         ),
       ),
@@ -407,7 +455,19 @@ class CaregiverProfile extends StatelessWidget {
           return Column(
             children: [
               Text(
-                index == 0 ? 'MON' : index == 1 ? 'TUE' : index == 2 ? 'WED' : index == 3 ? 'THU' : index == 4 ? 'FRI' : index == 5 ? 'SAT' : 'SUN',
+                index == 0
+                    ? 'MON'
+                    : index == 1
+                    ? 'TUE'
+                    : index == 2
+                    ? 'WED'
+                    : index == 3
+                    ? 'THU'
+                    : index == 4
+                    ? 'FRI'
+                    : index == 5
+                    ? 'SAT'
+                    : 'SUN',
                 style: const TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.bold,

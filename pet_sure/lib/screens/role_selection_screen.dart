@@ -42,11 +42,11 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          color: AppTheme.primaryOrange,
-          icon: const Icon(Icons.arrow_back_ios),
-        ),
+        // leading: IconButton(
+        //   onPressed: () => Navigator.pop(context),
+        //   color: AppTheme.primaryOrange,
+        //   icon: const Icon(Icons.arrow_back_ios),
+        // ),
         title: const Text('Select Your Role'),
         centerTitle: true,
         backgroundColor: AppTheme.background,
