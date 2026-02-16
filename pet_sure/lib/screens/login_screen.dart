@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
 import 'package:pet_sure/screens/signup_screen.dart';
 import 'package:pet_sure/screens/role_selection_screen.dart';
+import 'package:pet_sure/services/auth_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -111,6 +112,15 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> {
   bool _obscurePassword = true;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +142,7 @@ class _LoginFormState extends State<LoginForm> {
 
         /// EMAIL FIELD
         TextField(
+          controller: _emailController,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: 'name@example.com',
@@ -149,9 +160,7 @@ class _LoginFormState extends State<LoginForm> {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(28),
               borderSide: BorderSide(
-                color: AppTheme.primaryOrange.withValues(
-                  alpha: 0.4,
-                ),
+                color: AppTheme.primaryOrange.withValues(alpha: 0.4),
               ),
             ),
           ),
@@ -192,6 +201,7 @@ class _LoginFormState extends State<LoginForm> {
 
         /// PASSWORD FIELD
         TextField(
+          controller: _passwordController,
           keyboardType: TextInputType.emailAddress,
           obscureText: _obscurePassword,
           decoration: InputDecoration(
@@ -233,11 +243,26 @@ class _LoginFormState extends State<LoginForm> {
           width: double.infinity,
           height: 52,
           child: ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => const RoleSelectionScreen()),
-              );
+            onPressed: () async {
+              try {
+                final user = await AuthService().login(
+                  _emailController.text.trim(),
+                  _passwordController.text.trim(),
+                );
+
+                if (user != null && context.mounted) {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const RoleSelectionScreen(),
+                    ),
+                  );
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(e.toString())));
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppTheme.primaryOrange,

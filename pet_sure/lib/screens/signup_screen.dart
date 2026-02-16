@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pet_sure/core/app_theme.dart';
+import 'package:pet_sure/screens/role_selection_screen.dart';
+import 'package:pet_sure/services/auth_service.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -12,14 +14,16 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   bool _obscurePassword = true;
 
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   InputDecoration _inputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
       hintStyle: const TextStyle(color: AppTheme.tertiaryGray),
       filled: true,
       fillColor: Colors.white,
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: const BorderSide(color: AppTheme.borderGray),
@@ -31,6 +35,13 @@ class _SignupScreenState extends State<SignupScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -51,10 +62,7 @@ class _SignupScreenState extends State<SignupScreen> {
           leading: const BackButton(color: Colors.black),
           title: const Text(
             'Sign Up',
-            style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
           ),
         ),
         body: SingleChildScrollView(
@@ -101,20 +109,23 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 24),
 
               /// FULL NAME
-              const Text('Full Name',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
-              const SizedBox(height: 6),
-              TextField(
-                decoration: _inputDecoration('e.g. Jane Doe'),
+              const Text(
+                'Full Name',
+                style: TextStyle(fontWeight: FontWeight.w600),
               ),
+              const SizedBox(height: 6),
+              TextField(decoration: _inputDecoration('e.g. Jane Doe')),
 
               const SizedBox(height: 14),
 
               /// EMAIL
-              const Text('Email Address',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text(
+                'Email Address',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 6),
               TextField(
+                controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
                 decoration: _inputDecoration('name@example.com'),
               ),
@@ -122,13 +133,15 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 14),
 
               /// PASSWORD
-              const Text('Password',
-                  style: TextStyle(fontWeight: FontWeight.w600)),
+              const Text(
+                'Password',
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
               const SizedBox(height: 6),
               TextField(
+                controller: _passwordController,
                 obscureText: _obscurePassword,
-                decoration:
-                    _inputDecoration('Minimum 8 characters').copyWith(
+                decoration: _inputDecoration('Minimum 8 characters').copyWith(
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscurePassword
@@ -152,7 +165,27 @@ class _SignupScreenState extends State<SignupScreen> {
                 width: double.infinity,
                 height: 48,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    try {
+                      final user = await AuthService().signUp(
+                        _emailController.text.trim(),
+                        _passwordController.text.trim(),
+                      );
+
+                      if (user != null && context.mounted) {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RoleSelectionScreen(),
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      ScaffoldMessenger.of(
+                        context,
+                      ).showSnackBar(SnackBar(content: Text(e.toString())));
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryOrange,
                     elevation: 0,
@@ -176,8 +209,7 @@ class _SignupScreenState extends State<SignupScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: const [
-                  Icon(Icons.lock,
-                      size: 14, color: AppTheme.secondaryGray),
+                  Icon(Icons.lock, size: 14, color: AppTheme.secondaryGray),
                   SizedBox(width: 6),
                   Text(
                     'Secure, encrypted registration',
@@ -215,8 +247,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: RichText(
                   text: const TextSpan(
                     text: 'Already part of the family? ',
-                    style:
-                        TextStyle(color: AppTheme.secondaryGray),
+                    style: TextStyle(color: AppTheme.secondaryGray),
                     children: [
                       TextSpan(
                         text: 'Log in',
@@ -237,10 +268,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: Text(
                   'By joining, you agree to our Terms and Privacy Policy',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: AppTheme.secondaryGray,
-                  ),
+                  style: TextStyle(fontSize: 11, color: AppTheme.secondaryGray),
                 ),
               ),
             ],
