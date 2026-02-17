@@ -97,7 +97,7 @@ class DiscoverScreen extends StatelessWidget {
       ),
 
       /* ---------------- BOTTOM NAV ---------------- */
-      bottomNavigationBar: _bottomNav(),
+      // bottomNavigationBar: _bottomNav(),
     );
   }
 
@@ -374,23 +374,5 @@ class DiscoverScreen extends StatelessWidget {
     );
   }
 
-  Widget _bottomNav() {
-    return BottomNavigationBar(
-      type: BottomNavigationBarType.fixed,
-      selectedItemColor: amberDeep,
-      unselectedItemColor: Colors.grey,
-      items: const [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.explore), label: 'Discover'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline), label: 'Inbox'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle, size: 36), label: ''),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today), label: 'Schedule'),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.pets), label: 'Pets'),
-      ],
-    );
-  }
+
 }

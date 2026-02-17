@@ -4,9 +4,7 @@ import 'package:pet_sure/core/app_theme.dart';
 // TODO: update imports with your actual screen paths
 import 'package:pet_sure/screens/petowner/dashboard_screen.dart';
 import 'package:pet_sure/screens/petowner/invites_screen.dart';
-// import 'package:pet_sure/screens/petowner/create_screen.dart';
-// import 'package:pet_sure/screens/petowner/schedule_screen.dart';
-// import 'package:pet_sure/screens/petowner/pets_screen.dart';
+import 'package:pet_sure/screens/petowner/profile_screen.dart';
 
 class PetOwnerMainScreen extends StatefulWidget {
   const PetOwnerMainScreen({super.key});
@@ -21,9 +19,7 @@ class _PetOwnerMainScreenState extends State<PetOwnerMainScreen> {
   final List<Widget> _screens = const [
     DiscoverScreen(),
     InviteScreen(),
-    // PetOwnerCreateScreen(),
-    // PetOwnerScheduleScreen(),
-    // PetOwnerPetsScreen(),
+    ProfileScreen(),
   ];
 
   void _onItemTapped(int index) {
@@ -62,21 +58,9 @@ class _PetOwnerMainScreenState extends State<PetOwnerMainScreen> {
             label: 'Discover',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            activeIcon: Icon(Icons.chat_bubble),
-            label: 'Inbox',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.add_circle,
-              size: 36,
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.calendar_today_outlined),
-            activeIcon: Icon(Icons.calendar_today),
-            label: 'Schedule',
+            icon: Icon(Icons.file_open_outlined),
+            activeIcon: Icon(Icons.file_open),
+            label: 'Invites',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.pets_outlined),

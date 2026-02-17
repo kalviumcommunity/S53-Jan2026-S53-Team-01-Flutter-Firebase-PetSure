@@ -4,6 +4,7 @@ import 'package:pet_sure/screens/caregiver/caregiver_main_screen.dart';
 import 'package:pet_sure/screens/petowner/dashboard_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pet_sure/services/user_service.dart';
+import 'package:pet_sure/screens/petowner/petowner_main_screen.dart';
 
 enum UserRole { petOwner, caregiver }
 
@@ -38,7 +39,7 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
     if (roleString == "pet_owner") {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const DiscoverScreen()),
+        MaterialPageRoute(builder: (_) => const PetOwnerMainScreen()),
       );
     } else {
       Navigator.pushReplacement(
