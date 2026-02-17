@@ -1,14 +1,15 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
 import 'package:pet_sure/screens/caregiver/caregiver_main_screen.dart';
 import 'package:pet_sure/screens/petowner/dashboard_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pet_sure/services/user_service.dart';
 
 enum UserRole { petOwner, caregiver }
 
 class RoleSelectionScreen extends StatefulWidget {
-  const RoleSelectionScreen({super.key});
+  final String? name;
+  const RoleSelectionScreen({super.key, this.name});
 
   @override
   State<RoleSelectionScreen> createState() => _RoleSelectionScreenState();
@@ -17,22 +18,32 @@ class RoleSelectionScreen extends StatefulWidget {
 class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
   UserRole? selectedRole;
 
-  void _handleContinue() {
-    log("Continue pressed: $selectedRole");
+  Future<void> _handleContinue() async {
+    if (selectedRole == null) return;
 
-    if (selectedRole == UserRole.caregiver) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null) return;
+
+    String roleString = selectedRole == UserRole.petOwner
+        ? "pet_owner"
+        : "caregiver";
+
+    await UserService().createUserProfile(
+      uid: currentUser.uid,
+      name: widget.name ?? '',
+      email: currentUser.email ?? "",
+      role: roleString,
+    );
+
+    if (roleString == "pet_owner") {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const CaregiverMainScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const DiscoverScreen()),
       );
-    } else if (selectedRole == UserRole.petOwner) {
+    } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => const DiscoverScreen(),
-        ),
+        MaterialPageRoute(builder: (_) => const CaregiverMainScreen()),
       );
     }
   }
@@ -167,8 +178,9 @@ class PetOwnerRoleCard extends StatelessWidget {
                   opacity: 0.15,
                   child: CircleAvatar(
                     radius: 60,
-                    backgroundImage:
-                        const AssetImage('assets/BackgroundDog.png'),
+                    backgroundImage: const AssetImage(
+                      'assets/BackgroundDog.png',
+                    ),
                   ),
                 ),
               ),
@@ -273,8 +285,9 @@ class CareGiverRoleCard extends StatelessWidget {
                   opacity: 0.15,
                   child: CircleAvatar(
                     radius: 60,
-                    backgroundImage:
-                        const AssetImage('assets/BackgroundCaregiver.png'),
+                    backgroundImage: const AssetImage(
+                      'assets/BackgroundCaregiver.png',
+                    ),
                   ),
                 ),
               ),
@@ -287,8 +300,7 @@ class CareGiverRoleCard extends StatelessWidget {
                       icon: Icons.directions_walk,
                       isSelected: isSelected,
                       onSelected: onSelected,
-                      bgColor:
-                          const Color(0xFF6CEE2B).withValues(alpha: 0.12),
+                      bgColor: const Color(0xFF6CEE2B).withValues(alpha: 0.12),
                     ),
                     const SizedBox(height: 16),
                     const Text(

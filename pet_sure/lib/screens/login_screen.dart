@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
+import 'package:pet_sure/screens/caregiver/caregiver_main_screen.dart';
+import 'package:pet_sure/screens/petowner/dashboard_screen.dart';
 import 'package:pet_sure/screens/signup_screen.dart';
 import 'package:pet_sure/screens/role_selection_screen.dart';
 import 'package:pet_sure/services/auth_service.dart';
+import 'package:pet_sure/services/user_service.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -250,13 +253,36 @@ class _LoginFormState extends State<LoginForm> {
                   _passwordController.text.trim(),
                 );
 
-                if (user != null && context.mounted) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const RoleSelectionScreen(),
-                    ),
-                  );
+                if (user != null) {
+                  final profile = await UserService().getUserProfile(user.uid);
+
+                  if (!profile.exists) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const RoleSelectionScreen(),
+                      ),
+                    );
+                  } else {
+                    final data = profile.data() as Map<String, dynamic>;
+                    final role = data['role'];
+
+                    if (role == "pet_owner") {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const DiscoverScreen(),
+                        ),
+                      );
+                    } else {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CaregiverMainScreen(),
+                        ),
+                      );
+                    }
+                  }
                 }
               } catch (e) {
                 ScaffoldMessenger.of(

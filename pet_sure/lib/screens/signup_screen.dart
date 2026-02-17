@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pet_sure/core/app_theme.dart';
+import 'package:pet_sure/screens/login_screen.dart';
 import 'package:pet_sure/screens/role_selection_screen.dart';
 import 'package:pet_sure/services/auth_service.dart';
 
@@ -14,6 +15,7 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   bool _obscurePassword = true;
 
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -39,6 +41,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void dispose() {
+    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -114,7 +117,10 @@ class _SignupScreenState extends State<SignupScreen> {
                 style: TextStyle(fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 6),
-              TextField(decoration: _inputDecoration('e.g. Jane Doe')),
+              TextField(
+                controller: _nameController,
+                keyboardType: TextInputType.emailAddress,
+                decoration: _inputDecoration('e.g. Jane Doe')),
 
               const SizedBox(height: 14),
 
@@ -176,7 +182,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const RoleSelectionScreen(),
+                            builder: (_) => RoleSelectionScreen(name: _nameController.text.trim()),
                           ),
                         );
                       }
@@ -243,22 +249,29 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 22),
 
               /// LOGIN LINK
-              Center(
-                child: RichText(
-                  text: const TextSpan(
-                    text: 'Already part of the family? ',
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Already part of the family? ',
                     style: TextStyle(color: AppTheme.secondaryGray),
-                    children: [
-                      TextSpan(
-                        text: 'Log in',
-                        style: TextStyle(
-                          color: AppTheme.primaryOrange,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
                   ),
-                ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      );
+                    },
+                    child: const Text(
+                      'Log in',
+                      style: TextStyle(
+                        color: AppTheme.primaryOrange,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
 
               const SizedBox(height: 12),
