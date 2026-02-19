@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
 
@@ -14,9 +16,7 @@ class DashboardScreen extends StatelessWidget {
         title: Row(
           children: [
             const CircleAvatar(
-              backgroundImage: AssetImage(
-                'assets/puppy.jpg',
-              ),
+              backgroundImage: AssetImage('assets/puppy.jpg'),
               radius: 20,
             ),
             const SizedBox(width: 12),
@@ -223,32 +223,58 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            _buildJobCard(
-              name: 'Cooper',
-              image: 'assets/puppy.jpg',
-              details: 'Mike R. • Upper West Side',
-              time: 'Today, 4:00 PM',
-              service: 'Dog Walking',
-              price: '25.00',
-              tag: 'REPEAT CUSTOMER',
-              tagColor: Colors.blue.shade50,
-              tagTextColor: Colors.blue,
-              isDog: true,
+            StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('requests')
+                  .where('status', isEqualTo: 'open')
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final jobs = snapshot.data!.docs;
+                final currentUser = FirebaseAuth.instance.currentUser!;
+
+                if (jobs.isEmpty) {
+                  return const Center(child: Text("No jobs available"));
+                }
+
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: jobs.length,
+                  itemBuilder: (context, index) {
+                    final doc = jobs[index];
+                    final data = jobs[index].data() as Map<String, dynamic>;
+                    final appliedCaregivers = List<String>.from(
+                      data['appliedCaregivers'] ?? [],
+                    );
+
+                    final bool hasApplied = appliedCaregivers.contains(
+                      currentUser.uid,
+                    );
+
+                    return _buildJobCard(
+                      context,
+                      docId: doc.id,
+                      name: data['petName'] ?? '',
+                      imageUrl: data['imageUrl'] ?? '',
+                      details: '${data['ownerName']} • ${data['location']}',
+                      time: '${data['date']}, ${data['time']}',
+                      service: data['serviceType'] ?? '',
+                      price: data['price'].toString(),
+                      tag: data['petType'].toString().toUpperCase(),
+                      tagColor: Colors.orange.shade50,
+                      tagTextColor: Colors.orange,
+                      isDog: data['petType'] == "dog",
+                      hasApplied: hasApplied,
+                    );
+                  },
+                );
+              },
             ),
-            const SizedBox(height: 16),
-            _buildJobCard(
-              name: 'Luna',
-              image: 'assets/puppy.jpg',
-              details: 'Emily W. • Brooklyn Heights',
-              time: 'Tue, Jul 12',
-              service: 'House Sitting',
-              price: '85.00',
-              tag: 'NEW CLIENT',
-              tagColor: Colors.green.shade50,
-              tagTextColor: Colors.green,
-              isDog: false,
-            ),
+
             const SizedBox(height: 24),
             Text(
               'TODAY\'S SCHEDULE',
@@ -293,13 +319,14 @@ class DashboardScreen extends StatelessWidget {
           ],
         ),
       ),
-
     );
   }
 
-  Widget _buildJobCard({
+  Widget _buildJobCard(
+    BuildContext context, {
+    required String docId,
     required String name,
-    required String image,
+    required String imageUrl,
     required String details,
     required String time,
     required String service,
@@ -308,6 +335,7 @@ class DashboardScreen extends StatelessWidget {
     required Color tagColor,
     required Color tagTextColor,
     required bool isDog,
+    required bool hasApplied,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -333,7 +361,7 @@ class DashboardScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
                   image: DecorationImage(
-                    image: AssetImage(image),
+                    image: NetworkImage(imageUrl),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -419,7 +447,22 @@ class DashboardScreen extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: hasApplied
+                  ? null
+                  : () async {
+                      final uid = FirebaseAuth.instance.currentUser!.uid;
+
+                      await FirebaseFirestore.instance
+                          .collection('requests')
+                          .doc(docId)
+                          .update({
+                            'appliedCaregivers': FieldValue.arrayUnion([uid]),
+                          });
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("Applied successfully")),
+                      );
+                    },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppTheme.primaryOrange,
                 foregroundColor: Colors.white,
@@ -429,12 +472,24 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: Text(
-                'Apply for \$$price',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
+              child: hasApplied
+                  ? const Text(
+                      'Applied',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  : Text(
+                      'Apply for \$$price',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
             ),
           ),
+          const SizedBox(height: 16),
         ],
       ),
     );
