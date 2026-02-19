@@ -68,6 +68,9 @@ flutter:
     - assets/dog.png
     - assets/sitter_1.png
     - assets/sitter_2.png
+    - assets/dog1.png
+    - assets/cat.jpg
+    - assets/profile.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
