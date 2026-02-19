@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
 
@@ -94,57 +96,70 @@ class _RequestsScreenState extends State<RequestsScreen>
           _buildHistoryTab(),
         ],
       ),
-
     );
   }
 
   Widget _buildSentRequestsTab() {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        const Text(
-          'SENT BY YOU',
-          style: TextStyle(
-            color: AppTheme.tertiaryGray,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-          ),
-        ),
-        const SizedBox(height: 16),
-        _buildSentRequestCard(
-          name: 'Max',
-          ownerName: 'Sarah J.',
-          image: 'assets/puppy.jpg',
-          service: 'Drop-In Visit',
-          time: 'Tomorrow, 10:00 AM',
-          status: 'PENDING',
-          statusColor: Colors.orange.shade50,
-          statusTextColor: Colors.orange,
-        ),
-        const SizedBox(height: 16),
-        _buildSentRequestCard(
-          name: 'Daisy',
-          ownerName: 'Robert P.',
-          image: 'assets/puppy.jpg', // Placeholder
-          service: 'Dog Walking',
-          time: 'Sat, Oct 15 • 3:00 PM',
-          status: 'ACCEPTED',
-          statusColor: Colors.green.shade50,
-          statusTextColor: Colors.green,
-        ),
-        const SizedBox(height: 16),
-        _buildSentRequestCard(
-          name: 'Rocky',
-          ownerName: 'Mike T.',
-          image: 'assets/puppy.jpg', // Placeholder
-          service: 'House Sitting',
-          time: 'Oct 20 - Oct 22',
-          status: 'REJECTED',
-          statusColor: Colors.red.shade50,
-          statusTextColor: Colors.red,
-        ),
-      ],
+    final currentUser = FirebaseAuth.instance.currentUser!;
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('requests')
+          .where('appliedCaregivers', arrayContains: currentUser.uid)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final jobs = snapshot.data!.docs;
+
+        if (jobs.isEmpty) {
+          return const Center(child: Text("No applications yet"));
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: jobs.length,
+          itemBuilder: (context, index) {
+            final data = jobs[index].data() as Map<String, dynamic>;
+
+            final status = data['status'];
+
+            Color statusColor;
+            Color statusTextColor;
+
+            switch (status) {
+              case 'accepted':
+                statusColor = Colors.green.shade50;
+                statusTextColor = Colors.green;
+                break;
+              case 'rejected':
+                statusColor = Colors.red.shade50;
+                statusTextColor = Colors.red;
+                break;
+              default:
+                statusColor = Colors.orange.shade50;
+                statusTextColor = Colors.orange;
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: _buildSentRequestCard(
+                docId: jobs[index].id,
+                name: data['petName'],
+                ownerName: data['ownerName'],
+                image: data['imageUrl'],
+                service: data['serviceType'],
+                time: '${data['date']}, ${data['time']}',
+                status: status.toString().toUpperCase(),
+                statusColor: statusColor,
+                statusTextColor: statusTextColor,
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -175,11 +190,13 @@ class _RequestsScreenState extends State<RequestsScreen>
         _buildInviteCard(
           name: 'Bella & Cooper',
           ownerName: 'Emily W.',
-          image: 'assets/puppy.jpg', // Using placeholder if specific asset doesn't exist
+          image:
+              'assets/puppy.jpg', // Using placeholder if specific asset doesn't exist
           service: 'House Sitting',
           time: 'Oct 12 - Oct 14',
           price: '180',
-          isPrivate: false, // Just to show variety if needed, but design says Private Invites
+          isPrivate:
+              false, // Just to show variety if needed, but design says Private Invites
         ),
       ],
     );
@@ -242,6 +259,7 @@ class _RequestsScreenState extends State<RequestsScreen>
   }
 
   Widget _buildSentRequestCard({
+    required String docId,
     required String name,
     required String ownerName,
     required String image,
@@ -268,10 +286,7 @@ class _RequestsScreenState extends State<RequestsScreen>
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundImage: AssetImage(image),
-              ),
+              CircleAvatar(radius: 24, backgroundImage: NetworkImage(image)),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
@@ -403,6 +418,27 @@ class _RequestsScreenState extends State<RequestsScreen>
               ),
             ],
           ),
+          if (status.toLowerCase() == 'open')
+            TextButton(
+              onPressed: () async {
+                final uid = FirebaseAuth.instance.currentUser!.uid;
+
+                await FirebaseFirestore.instance
+                    .collection('requests')
+                    .doc(docId)
+                    .update({
+                      'appliedCaregivers': FieldValue.arrayRemove([uid]),
+                    });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Application withdrawn")),
+                );
+              },
+              child: const Text(
+                "Withdraw",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
         ],
       ),
     );
@@ -434,10 +470,7 @@ class _RequestsScreenState extends State<RequestsScreen>
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 24,
-                backgroundImage: AssetImage(image),
-              ),
+              CircleAvatar(radius: 24, backgroundImage: AssetImage(image)),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
