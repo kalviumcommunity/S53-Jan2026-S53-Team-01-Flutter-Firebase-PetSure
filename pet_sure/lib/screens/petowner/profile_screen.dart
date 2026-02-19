@@ -105,7 +105,7 @@ class ProfileScreen extends StatelessWidget {
           children: [
             const CircleAvatar(
               radius: 45,
-              backgroundImage: AssetImage("assets/profile.jpg"),
+              backgroundImage: AssetImage("assets/profile.png"),
             ),
             Positioned(
               bottom: 0,
@@ -169,7 +169,7 @@ class ProfileScreen extends StatelessWidget {
           name: "Luna",
           breed: "Golden Retriever • 3 yrs",
           tags: ["Active", "Vaccinated"],
-          image: "assets/dog.jpg",
+          image: "assets/dog1.png",
         ),
         SizedBox(height: 12),
         PetCard(
