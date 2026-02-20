@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'caregiver_profile_details.dart';
 
 class DiscoverScreen extends StatelessWidget {
   const DiscoverScreen({super.key});
@@ -14,43 +15,35 @@ class DiscoverScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: bgLight,
 
-      /* ---------------- HEADER ---------------- */
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         titleSpacing: 16,
         title: Row(
-          children: [
-            const CircleAvatar(
+          children: const [
+            CircleAvatar(
               radius: 20,
               backgroundImage: AssetImage('assets/dog.png'),
             ),
-            const SizedBox(width: 12),
+            SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  'Find care for Buddy',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                    color: textDark,
-                  ),
-                ),
+              children: [
+                Text('Find care for Buddy',
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w700,
+                        color: textDark)),
                 SizedBox(height: 2),
                 Row(
                   children: [
-                    Icon(Icons.location_on,
-                        size: 14, color: amberDeep),
+                    Icon(Icons.location_on, size: 14, color: amberDeep),
                     SizedBox(width: 2),
-                    Text(
-                      'Brooklyn, NY',
-                      style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF6F8961),
-                      ),
-                    ),
+                    Text('Brooklyn, NY',
+                        style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF6F8961))),
                   ],
                 ),
               ],
@@ -65,7 +58,6 @@ class DiscoverScreen extends StatelessWidget {
         ],
       ),
 
-      /* ---------------- BODY ---------------- */
       body: ListView(
         padding: const EdgeInsets.only(bottom: 140),
         children: [
@@ -74,6 +66,7 @@ class DiscoverScreen extends StatelessWidget {
           _sectionHeader(),
 
           _sitterCard(
+            context,
             imageAsset: 'assets/sitter_1.png',
             name: 'Sarah Jenkins',
             rating: '4.9',
@@ -84,6 +77,7 @@ class DiscoverScreen extends StatelessWidget {
           ),
 
           _sitterCard(
+            context,
             imageAsset: 'assets/sitter_2.png',
             name: 'Marcus Chen',
             rating: '5.0',
@@ -95,13 +89,8 @@ class DiscoverScreen extends StatelessWidget {
           ),
         ],
       ),
-
-      /* ---------------- BOTTOM NAV ---------------- */
-      // bottomNavigationBar: _bottomNav(),
     );
   }
-
-  /* ================= WIDGETS ================= */
 
   Widget _searchBar() {
     return Padding(
@@ -168,31 +157,23 @@ class DiscoverScreen extends StatelessWidget {
   }
 
   Widget _sectionHeader() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
+    return const Padding(
+      padding: EdgeInsets.all(16),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          Text(
-            'Nearby top-rated',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-          Text(
-            'See All',
-            style: TextStyle(
-              color: amberDeep,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+        children: [
+          Text('Nearby top-rated',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
+          Text('See All',
+              style: TextStyle(
+                  color: amberDeep, fontWeight: FontWeight.bold)),
         ],
       ),
     );
   }
 
-  Widget _sitterCard({
+  Widget _sitterCard(
+    BuildContext context, {
     required String imageAsset,
     required String name,
     required String rating,
@@ -228,11 +209,7 @@ class DiscoverScreen extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                Positioned(
-                  top: 12,
-                  left: 12,
-                  child: _verifiedBadge(),
-                ),
+                Positioned(top: 12, left: 12, child: _verifiedBadge()),
                 Positioned(
                   bottom: 12,
                   left: 12,
@@ -244,8 +221,7 @@ class DiscoverScreen extends StatelessWidget {
                 const Positioned(
                   top: 12,
                   right: 12,
-                  child: Icon(Icons.favorite,
-                      color: Colors.red, size: 22),
+                  child: Icon(Icons.favorite, color: Colors.red, size: 22),
                 ),
               ],
             ),
@@ -260,40 +236,29 @@ class DiscoverScreen extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            name,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          Text(name,
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold)),
                           Row(
                             children: [
                               const Icon(Icons.star,
                                   size: 16, color: amberDeep),
-                              Text(
-                                ' $rating ($reviews reviews)',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600),
-                              ),
+                              Text(' $rating ($reviews reviews)',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600)),
                             ],
                           )
                         ],
                       ),
-                      Text(
-                        price,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
+                      Text(price,
+                          style: const TextStyle(
+                              fontSize: 18, fontWeight: FontWeight.w800)),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  Text(
-                    description,
-                    style: TextStyle(color: Colors.grey.shade600),
-                  ),
+                  Text(description,
+                      style: TextStyle(color: Colors.grey.shade600)),
                   const SizedBox(height: 14),
                   Row(
                     children: [
@@ -306,7 +271,21 @@ class DiscoverScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => CaregiverProfileScreen(
+                                  name: name,
+                                  imageAsset: imageAsset,
+                                  rating: rating,
+                                  reviews: reviews,
+                                  price: price,
+                                  description: description,
+                                ),
+                              ),
+                            );
+                          },
                           child: const Text('Book Now'),
                         ),
                       ),
@@ -315,10 +294,12 @@ class DiscoverScreen extends StatelessWidget {
                         height: 48,
                         width: 48,
                         decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey.shade300),
+                          border:
+                              Border.all(color: Colors.grey.shade300),
                           borderRadius: BorderRadius.circular(16),
                         ),
-                        child: const Icon(Icons.chat_bubble_outline),
+                        child:
+                            const Icon(Icons.chat_bubble_outline),
                       ),
                     ],
                   ),
@@ -338,19 +319,15 @@ class DiscoverScreen extends StatelessWidget {
         color: Colors.white.withValues(alpha: 0.9),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Row(
-        children: const [
-          Icon(Icons.verified,
-              size: 16, color: verifiedGreen),
+      child: const Row(
+        children: [
+          Icon(Icons.verified, size: 16, color: verifiedGreen),
           SizedBox(width: 4),
-          Text(
-            'Verified ID',
-            style: TextStyle(
-              fontSize: 10,
-              fontWeight: FontWeight.bold,
-              color: verifiedGreen,
-            ),
-          ),
+          Text('Verified ID',
+              style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  color: verifiedGreen)),
         ],
       ),
     );
@@ -363,16 +340,11 @@ class DiscoverScreen extends StatelessWidget {
         color: Colors.black.withValues(alpha: 0.45),
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 10,
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
+      child: Text(text,
+          style: const TextStyle(
+              fontSize: 10,
+              color: Colors.white,
+              fontWeight: FontWeight.bold)),
     );
   }
-
-
 }
