@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
+import 'package:pet_sure/screens/petowner/create_job_screen.dart';
 
-// TODO: update imports with your actual screen paths
 import 'package:pet_sure/screens/petowner/dashboard_screen.dart';
 import 'package:pet_sure/screens/petowner/invites_screen.dart';
 import 'package:pet_sure/screens/petowner/profile_screen.dart';
@@ -32,10 +32,22 @@ class _PetOwnerMainScreenState extends State<PetOwnerMainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: _screens,
+
+      body: IndexedStack(index: _selectedIndex, children: _screens),
+
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppTheme.primaryOrange,
+        child: const Icon(Icons.add, color: Colors.white),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const CreateJobScreen()),
+          );
+        },
       ),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
