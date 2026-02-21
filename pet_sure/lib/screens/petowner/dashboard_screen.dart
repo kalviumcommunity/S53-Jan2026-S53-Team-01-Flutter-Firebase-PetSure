@@ -1,4 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_sure/core/app_theme.dart';
+import 'package:pet_sure/screens/petowner/caregiver_public_profile_screen.dart';
 
 class DiscoverScreen extends StatelessWidget {
   const DiscoverScreen({super.key});
@@ -40,8 +44,7 @@ class DiscoverScreen extends StatelessWidget {
                 SizedBox(height: 2),
                 Row(
                   children: [
-                    Icon(Icons.location_on,
-                        size: 14, color: amberDeep),
+                    Icon(Icons.location_on, size: 14, color: amberDeep),
                     SizedBox(width: 2),
                     Text(
                       'Brooklyn, NY',
@@ -73,25 +76,43 @@ class DiscoverScreen extends StatelessWidget {
           _filters(),
           _sectionHeader(),
 
-          _sitterCard(
-            imageAsset: 'assets/sitter_1.png',
-            name: 'Sarah Jenkins',
-            rating: '4.9',
-            reviews: '142',
-            price: '\$25/hr',
-            description: 'Expert in puppy care and high-energy breeds.',
-            badges: const ['120+ walks', 'Repeat client'],
-          ),
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .where('role', isEqualTo: 'caregiver')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-          _sitterCard(
-            imageAsset: 'assets/sitter_2.png',
-            name: 'Marcus Chen',
-            rating: '5.0',
-            reviews: '85',
-            price: '\$32/hr',
-            description:
-                'Providing calm, reliable care for senior and large dogs.',
-            badges: const ['85+ walks', 'Large dogs'],
+              final caregivers = snapshot.data!.docs;
+
+              if (caregivers.isEmpty) {
+                return const Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text("No caregivers found"),
+                );
+              }
+
+              return Column(
+                children: caregivers.map((doc) {
+                  final data = doc.data() as Map<String, dynamic>;
+
+                  return _sitterCard(
+                    context,
+                    caregiverId: doc.id,
+                    imageUrl: data['profileImage'] ?? '',
+                    name: data['name'] ?? '',
+                    rating: (data['rating'] ?? 0).toString(),
+                    reviews: (data['reviewsCount'] ?? 0).toString(),
+                    price: '\$${data['pricePerHour'] ?? 0}/hr',
+                    description: data['bio'] ?? '',
+                    badges: List<String>.from(data['servicesOffered'] ?? []),
+                  );
+                }).toList(),
+              );
+            },
           ),
         ],
       ),
@@ -102,7 +123,6 @@ class DiscoverScreen extends StatelessWidget {
   }
 
   /* ================= WIDGETS ================= */
-
   Widget _searchBar() {
     return Padding(
       padding: const EdgeInsets.all(16),
@@ -175,25 +195,21 @@ class DiscoverScreen extends StatelessWidget {
         children: const [
           Text(
             'Nearby top-rated',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-            ),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
           ),
           Text(
             'See All',
-            style: TextStyle(
-              color: amberDeep,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(color: amberDeep, fontWeight: FontWeight.bold),
           ),
         ],
       ),
     );
   }
 
-  Widget _sitterCard({
-    required String imageAsset,
+  Widget _sitterCard(
+    BuildContext context, {
+    required String caregiverId,
+    required String imageUrl,
     required String name,
     required String rating,
     required String reviews,
@@ -211,7 +227,7 @@ class DiscoverScreen extends StatelessWidget {
             BoxShadow(
               color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 12,
-            )
+            ),
           ],
         ),
         child: Column(
@@ -219,20 +235,33 @@ class DiscoverScreen extends StatelessWidget {
             Stack(
               children: [
                 ClipRRect(
-                  borderRadius:
-                      const BorderRadius.vertical(top: Radius.circular(28)),
-                  child: Image.asset(
-                    imageAsset,
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(28),
+                  ),
+                  child: Image.network(
+                    imageUrl,
                     height: 220,
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return const SizedBox(
+                        height: 220,
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 220,
+                        color: Colors.grey.shade300,
+                        child: const Center(
+                          child: Icon(Icons.person, size: 60),
+                        ),
+                      );
+                    },
                   ),
                 ),
-                Positioned(
-                  top: 12,
-                  left: 12,
-                  child: _verifiedBadge(),
-                ),
+                Positioned(top: 12, left: 12, child: _verifiedBadge()),
                 Positioned(
                   bottom: 12,
                   left: 12,
@@ -244,8 +273,7 @@ class DiscoverScreen extends StatelessWidget {
                 const Positioned(
                   top: 12,
                   right: 12,
-                  child: Icon(Icons.favorite,
-                      color: Colors.red, size: 22),
+                  child: Icon(Icons.favorite, color: Colors.red, size: 22),
                 ),
               ],
             ),
@@ -269,15 +297,19 @@ class DiscoverScreen extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              const Icon(Icons.star,
-                                  size: 16, color: amberDeep),
+                              const Icon(
+                                Icons.star,
+                                size: 16,
+                                color: amberDeep,
+                              ),
                               Text(
                                 ' $rating ($reviews reviews)',
                                 style: const TextStyle(
-                                    fontWeight: FontWeight.w600),
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                       Text(
@@ -300,13 +332,22 @@ class DiscoverScreen extends StatelessWidget {
                       Expanded(
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: amberWarm,
+                            backgroundColor: AppTheme.primaryOrange,
+                            foregroundColor: Colors.white,
                             minimumSize: const Size.fromHeight(48),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(16),
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                  CaregiverPublicProfileScreen(caregiverId: caregiverId,),
+                              ),
+                            );
+                          },
                           child: const Text('Book Now'),
                         ),
                       ),
@@ -340,8 +381,7 @@ class DiscoverScreen extends StatelessWidget {
       ),
       child: Row(
         children: const [
-          Icon(Icons.verified,
-              size: 16, color: verifiedGreen),
+          Icon(Icons.verified, size: 16, color: verifiedGreen),
           SizedBox(width: 4),
           Text(
             'Verified ID',
@@ -373,6 +413,4 @@ class DiscoverScreen extends StatelessWidget {
       ),
     );
   }
-
-
 }

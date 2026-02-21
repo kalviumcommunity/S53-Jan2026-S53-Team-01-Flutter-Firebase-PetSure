@@ -255,16 +255,37 @@ class DashboardScreen extends StatelessWidget {
                       currentUser.uid,
                     );
 
+                    final dynamic rawDate = data['date'];
+
+                    String formattedDate = '';
+
+                    if (rawDate is Timestamp) {
+                      final date = rawDate.toDate();
+                      formattedDate =
+                          "${date.day.toString().padLeft(2, '0')}/"
+                          "${date.month.toString().padLeft(2, '0')}/"
+                          "${date.year}";
+                    } else if (rawDate is String) {
+                      formattedDate = rawDate;
+                    }
+
+                    final String jobTime = data['time'] ?? '';
+
+                    final String finalDateTime = jobTime.isNotEmpty
+                        ? "$formattedDate • $jobTime"
+                        : formattedDate;
+
                     return _buildJobCard(
                       context,
                       docId: doc.id,
                       name: data['petName'] ?? '',
-                      imageUrl: data['imageUrl'] ?? '',
-                      details: '${data['ownerName']} • ${data['location']}',
-                      time: '${data['date']}, ${data['time']}',
+                      imageUrl: data['petImage'] ?? '',
+                      details:
+                          '${data['ownerName']} • ${data['ownerLocation']}',
+                      time: finalDateTime,
                       service: data['serviceType'] ?? '',
                       price: data['price'].toString(),
-                      tag: data['petType'].toString().toUpperCase(),
+                      tag: data['breed'].toString().toUpperCase(),
                       tagColor: Colors.orange.shade50,
                       tagTextColor: Colors.orange,
                       isDog: data['petType'] == "dog",
@@ -360,10 +381,12 @@ class DashboardScreen extends StatelessWidget {
                 height: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(16),
-                  image: DecorationImage(
-                    image: NetworkImage(imageUrl),
-                    fit: BoxFit.cover,
-                  ),
+                  image: imageUrl.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(imageUrl),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
                 ),
               ),
               const SizedBox(width: 16),

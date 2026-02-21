@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_sure/core/app_theme.dart';
 import 'package:pet_sure/screens/caregiver/caregiver_main_screen.dart';
 import 'package:pet_sure/screens/petowner/dashboard_screen.dart';
+import 'package:pet_sure/screens/petowner/petowner_main_screen.dart';
 import 'package:pet_sure/screens/signup_screen.dart';
 import 'package:pet_sure/screens/role_selection_screen.dart';
 import 'package:pet_sure/services/auth_service.dart';
@@ -271,7 +272,7 @@ class _LoginFormState extends State<LoginForm> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => const DiscoverScreen(),
+                          builder: (_) => const PetOwnerMainScreen(),
                         ),
                       );
                     } else {

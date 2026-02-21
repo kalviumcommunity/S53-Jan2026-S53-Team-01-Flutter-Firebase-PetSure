@@ -143,15 +143,30 @@ class _RequestsScreenState extends State<RequestsScreen>
                 statusTextColor = Colors.orange;
             }
 
+            final dynamic rawDate = data['date'];
+
+            String formattedDate = '';
+
+            if (rawDate is Timestamp) {
+              final date = rawDate.toDate();
+              formattedDate =
+                  "${date.day.toString().padLeft(2, '0')}/"
+                  "${date.month.toString().padLeft(2, '0')}/"
+                  "${date.year}";
+            } else if (rawDate is String) {
+              // If older jobs stored date as string
+              formattedDate = rawDate;
+            }
+
             return Padding(
               padding: const EdgeInsets.only(bottom: 16),
               child: _buildSentRequestCard(
                 docId: jobs[index].id,
-                name: data['petName'],
-                ownerName: data['ownerName'],
-                image: data['imageUrl'],
-                service: data['serviceType'],
-                time: '${data['date']}, ${data['time']}',
+                name: data['petName'] ?? '',
+                ownerName: data['ownerName'] ?? '',
+                image: data['imageUrl'] ?? '',
+                service: data['serviceType'] ?? '',
+                time: formattedDate,
                 status: status.toString().toUpperCase(),
                 statusColor: statusColor,
                 statusTextColor: statusTextColor,
@@ -164,97 +179,113 @@ class _RequestsScreenState extends State<RequestsScreen>
   }
 
   Widget _buildInvitesTab() {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        const Text(
-          'PRIVATE INVITES',
-          style: TextStyle(
-            color: AppTheme.tertiaryGray,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-          ),
-        ),
-        const SizedBox(height: 16),
-        _buildInviteCard(
-          name: 'Luna',
-          ownerName: 'Michael R.',
-          image: 'assets/puppy.jpg',
-          service: 'Dog Walking',
-          time: 'Today • 2:00 PM',
-          price: '25',
-          isPrivate: true,
-        ),
-        const SizedBox(height: 16),
-        _buildInviteCard(
-          name: 'Bella & Cooper',
-          ownerName: 'Emily W.',
-          image:
-              'assets/puppy.jpg', // Using placeholder if specific asset doesn't exist
-          service: 'House Sitting',
-          time: 'Oct 12 - Oct 14',
-          price: '180',
-          isPrivate:
-              false, // Just to show variety if needed, but design says Private Invites
-        ),
-      ],
+    final currentUser = FirebaseAuth.instance.currentUser!;
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('requests')
+          .where('caregiverId', isEqualTo: currentUser.uid)
+          .where('status', isEqualTo: 'pending')
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final invites = snapshot.data!.docs;
+
+        if (invites.isEmpty) {
+          return const Center(child: Text("No invites"));
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: invites.length,
+          itemBuilder: (context, index) {
+            final doc = invites[index];
+            final data = doc.data() as Map<String, dynamic>;
+
+            final dynamic rawDate = data['date'];
+            String formattedDate = '';
+
+            if (rawDate is Timestamp) {
+              final date = rawDate.toDate();
+              formattedDate = "${date.day}/${date.month}/${date.year}";
+            }
+
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: _buildInviteCard(
+                docId: doc.id,
+                name: data['petName'] ?? '',
+                ownerName: data['ownerName'] ?? '',
+                image: data['petImage'] ?? '',
+                service: data['serviceType'] ?? '',
+                time: formattedDate,
+                price: data['price']?.toString() ?? '',
+                isPrivate: true,
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
   Widget _buildHistoryTab() {
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        const Text(
-          'PAST SESSIONS',
-          style: TextStyle(
-            color: AppTheme.tertiaryGray,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
-            letterSpacing: 1.2,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Column(
-            children: [
-              _buildHistoryItem(
-                date: 'Oct 05',
-                name: 'Luna',
-                service: 'Dog Walking',
-                price: '25.00',
-                isLast: false,
-              ),
-              _buildHistoryItem(
-                date: 'Oct 02',
-                name: 'Cooper',
-                service: 'Drop-In Visit',
-                price: '20.00',
-                isLast: false,
-              ),
-              _buildHistoryItem(
-                date: 'Sep 28',
-                name: 'Max',
-                service: 'House Sitting',
-                price: '150.00',
+    final currentUser = FirebaseAuth.instance.currentUser!;
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('requests')
+          .where('status', whereIn: ['accepted', 'rejected'])
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        final all = snapshot.data!.docs;
+
+        final history = all.where((doc) {
+          final data = doc.data() as Map<String, dynamic>;
+          final List applied = data['appliedCaregivers'] ?? [];
+
+          return data['caregiverId'] == currentUser.uid ||
+              applied.contains(currentUser.uid);
+        }).toList();
+
+        if (history.isEmpty) {
+          return const Center(child: Text("No history yet"));
+        }
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: history.length,
+          itemBuilder: (context, index) {
+            final data = history[index].data() as Map<String, dynamic>;
+
+            final dynamic rawDate = data['date'];
+            String formattedDate = '';
+
+            if (rawDate is Timestamp) {
+              final date = rawDate.toDate();
+              formattedDate = "${date.day}/${date.month}";
+            }
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              child: _buildHistoryItem(
+                date: formattedDate,
+                name: data['petName'] ?? '',
+                service: data['serviceType'] ?? '',
+                price: data['price']?.toString() ?? '',
                 isLast: true,
               ),
-            ],
-          ),
-        ),
-      ],
+            );
+          },
+        );
+      },
     );
   }
 
@@ -445,6 +476,7 @@ class _RequestsScreenState extends State<RequestsScreen>
   }
 
   Widget _buildInviteCard({
+    required String docId,
     required String name,
     required String ownerName,
     required String image,
@@ -575,7 +607,12 @@ class _RequestsScreenState extends State<RequestsScreen>
               Expanded(
                 flex: 1,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await FirebaseFirestore.instance
+                        .collection('requests')
+                        .doc(docId)
+                        .update({'status': 'rejected'});
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.background,
                     foregroundColor: AppTheme.secondaryGray,
@@ -595,7 +632,12 @@ class _RequestsScreenState extends State<RequestsScreen>
               Expanded(
                 flex: 2,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    await FirebaseFirestore.instance
+                        .collection('requests')
+                        .doc(docId)
+                        .update({'status': 'accepted'});
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primaryOrange,
                     foregroundColor: Colors.white,
