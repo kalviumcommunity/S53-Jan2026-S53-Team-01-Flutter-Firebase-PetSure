@@ -8,6 +8,43 @@ The project is intentionally built as a **software-only prototype**, focusing on
 
 ---
 
+## 2. Install the Android App
+
+You can install and try the latest version of the application directly on your Android device.
+
+### Download APK
+
+[Download Latest APK](https://github.com/kalviumcommunity/S53-Jan2026-S53-Team-01-Flutter-Firebase-PetSure/releases/download/v1.0.0/app-release.apk)
+
+### Scan to Install
+
+Scan the QR code below using your phone to download the APK instantly.
+
+<img src="pet_sure/assets/pet_sure_qr.png" width="250">
+
+### Installation Steps
+
+1. Download the APK from the link or QR code.
+2. Open the downloaded file on your Android device.
+3. Allow **Install from unknown sources** if prompted.
+4. Tap **Install** and launch the app.
+
+---
+
+## 3. App Screenshots
+
+<p align="center">
+  <img src="pet_sure/assets/screenshots/PetSure_Login.jpeg" width="150"  style="margin:10px;">
+  <img src="pet_sure/assets/screenshots/PetSure_Signup.jpeg" width="150"  style="margin:10px;">
+  <img src="pet_sure/assets/screenshots/PetSure_PetOwnerDashboard.jpeg" width="150"  style="margin:10px;">
+  <img src="pet_sure/assets/screenshots/PetSure_PetOwnerRequests.jpeg" width="150"  style="margin:10px;">
+  <img src="pet_sure/assets/screenshots/PetSure_PetOwnerProfile.jpeg" width="150"  style="margin:10px;">
+  <img src="pet_sure/assets/screenshots/PetSure_CaregiverDashboard.jpeg" width="150"  style="margin:10px;">
+  <img src="pet_sure/assets/screenshots/PetSure_CaregiverRequests.jpeg" width="150"  style="margin:10px;">
+  <img src="pet_sure/assets/screenshots/PetSure_CaregiverInvites.jpeg" width="150"  style="margin:10px;">
+  <img src="pet_sure/assets/screenshots/PetSure_CaregiverProfile.jpeg" width="150"  style="margin:10px;">
+</p>
+
 ## 2. Problem Statement
 
 In urban environments, pet owners often depend on informal or unverified arrangements when hiring pet walkers or caregivers. Once a pet is handed over, owners lack clear visibility into:
